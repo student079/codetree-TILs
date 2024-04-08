@@ -49,9 +49,9 @@ def regenerate(i,j,year, newBoard):
     cnt = 0
     target = []
 
-    for k in range(4):
-        nx = i + dx[k]
-        ny = j + dy[k]
+    for t in range(4):
+        nx = i + dx[t]
+        ny = j + dy[t]
 
         if not (0 <= nx < n and 0 <= ny < n):
             continue
@@ -96,7 +96,7 @@ def select(i,j, k):
         if not (0 <= nx < n and 0 <= ny < n):
             continue
 
-        if board[nx][ny] > 0:
+        if board[nx][ny] > 0 and killers[nx][ny] < year:
             q.append((nx,ny, 1, (dx[d], dy[d])))
 
     while q:
