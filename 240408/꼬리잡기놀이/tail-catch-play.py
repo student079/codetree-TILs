@@ -31,7 +31,7 @@ def searchPeople(x, y):
             if not (0 <= nx < n and 0 <= ny < n):
                 continue
 
-            if board[nx][ny] == 3:
+            if board[nx][ny] == 3 and len(people) != 1:
                 people.append([nx, ny])
                 return people
             elif board[nx][ny] == 2 and [nx, ny] not in people:
@@ -50,21 +50,24 @@ def moveTeam(team):
 
             if not (0 <= nx < n and 0 <= ny < n):
                 continue
-
             if idx == 0:
-                if board[nx][ny] == 4:
+                if board[nx][ny] == 4 or board[nx][ny] == 3:
                     team.append([nx, ny])
-                    board[nx][ny] = board[x][y]
+                    board[nx][ny] = 1
                     board[x][y] = -1
+                    break
+            elif idx == teamLen - 1:
+                if board[nx][ny] == -1:
+                    team.append([nx, ny])
+                    board[nx][ny] = 3
+                    if [x, y] not in team:
+                        board[x][y] = 4
                     break
             else:
                 if board[nx][ny] == -1:
                     team.append([nx, ny])
-                    board[nx][ny] = board[x][y]
-                    if idx == teamLen - 1:
-                        board[x][y] = 4
-                    else:
-                        board[x][y] = -1
+                    board[nx][ny] = 2
+                    board[x][y] = -1
                     break
 
 def throwBall(round, teams):
@@ -114,13 +117,11 @@ for i in range(n):
 
 # 라운드 0,1, 2 증가하다가 n 이랑 같으면 나누고 나머지
 # 함수로 빼자
-
 answer = 0
 for round in range(k):
     # 머리사람 따라 한칸 이동
     for team in teams:
         moveTeam(team)
-
     # 공 던지기 + 사람 있는지 + 팀 머리꼬리 방향 바꾸고
     answer += throwBall(round, teams)
 print(answer)
