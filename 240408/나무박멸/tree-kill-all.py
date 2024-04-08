@@ -79,7 +79,7 @@ def generate(board, year):
                 regenerate(i,j,year, newBoard)
 
 
-def select(i,j, k):
+def select(i,j, k, year):
     dx = (1, 1, -1, -1)
     dy = (1, -1, 1, -1)
 
@@ -98,6 +98,7 @@ def select(i,j, k):
 
         if board[nx][ny] > 0 and killers[nx][ny] < year:
             q.append((nx,ny, 1, (dx[d], dy[d])))
+
 
     while q:
         nx, ny, times, d = q.popleft()
@@ -120,14 +121,14 @@ def select(i,j, k):
 
 
 
-def selectKiller(board, k):
+def selectKiller(board, k, year):
     cnt = 0
     sI = -1
     sJ = -1
     for i in range(n):
         for j in range(n):
-            if board[i][j] > 0:
-                temp = select(i,j, k)
+            if board[i][j] > 0 and killers[i][j] < year:
+                temp = select(i,j, k, year)
                 if temp > cnt:
                     cnt = temp
                     sI = i
@@ -147,6 +148,7 @@ def kill(board,i,j, year):
     q = deque()
     # 대각선
     # 벽있으면 더이상 제초제 확산 X
+    # 벽이 있거나 나무가 아얘 없는 칸이 있는 경우, 그 칸 까지는 제초제가 뿌려지며
     for d in range(4):
         nx = i + dx[d]
         ny = j + dy[d]
@@ -154,8 +156,10 @@ def kill(board,i,j, year):
         if not (0 <= nx < n and 0 <= ny < n):
             continue
 
-        if board[nx][ny] > 0:
+        if board[nx][ny] > 0 and killers[nx][ny] < year:
             q.append((nx, ny, 1, (dx[d], dy[d])))
+        elif board[nx][ny] == 0:
+            killers[nx][ny] = year + c
 
     while q:
         nx, ny, times, d = q.popleft()
@@ -173,8 +177,10 @@ def kill(board,i,j, year):
         if not (0 <= nnx < n and 0 <= nny < n):
             continue
 
-        if board[nnx][nny] > 0:
+        if board[nnx][nny] > 0 and killers[nnx][nny] < year:
             q.append((nnx, nny, times + 1, d))
+        elif board[nnx][nny] == 0:
+            killers[nnx][nny] = year + c
 
     return cnt
 
@@ -187,7 +193,7 @@ for year in range(1, m + 1):
     generate(board, year)
 
     # 제초제 뿌릴 곳 선정
-    i,j = selectKiller(board, k)
+    i,j = selectKiller(board, k, year)
 
     if i == -1 and j == -1:
         continue
