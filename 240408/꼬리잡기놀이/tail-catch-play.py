@@ -41,7 +41,8 @@ def searchPeople(x, y):
                 break
 
 def moveTeam(team):
-    for idx in range(len(team)):
+    teamLen = len(team)
+    for idx in range(teamLen):
         x, y = team.popleft()
         for k in range(4):
             nx = x + dx[k]
@@ -60,7 +61,7 @@ def moveTeam(team):
                 if board[nx][ny] == -1:
                     team.append([nx, ny])
                     board[nx][ny] = board[x][y]
-                    if idx == len(team) - 1:
+                    if idx == teamLen - 1:
                         board[x][y] = 4
                     else:
                         board[x][y] = -1
@@ -70,14 +71,17 @@ def throwBall(round, teams):
     direction = (round//n)%4
     distance = round%n
     
-    if direction %2 == 0:
+    if direction == 0:
         x, y = distance, 0
+    elif direction == 1:
+        x, y = n-1 ,distance
+    elif direction == 2:
+        x ,y = n -1 -distance, n-1
     else:
-        x, y = 0 ,distance
+        x, y = 0 , n -1 -distance
         
     addX = dx[direction]
     addY = dy[direction]
-
     for _ in range(n):
         if board[x][y] in (1,2,3):
             # 팀에서 몇번째인지 찾기
@@ -85,18 +89,20 @@ def throwBall(round, teams):
                 for idxPerson in range(len(teams[idxTeam])):
                     if x == teams[idxTeam][idxPerson][0] and y == teams[idxTeam][idxPerson][1]:
                         # 꼬리, 머리 바꾸기
-                        head = teams[idxTeam].popleft()
-                        tail = teams[idxTeam].pop()
+                        # 꼬리, 머리 뿐만 아니라 순서 아예 바꾸기
+
+                        head = teams[idxTeam][0]
+                        tail = teams[idxTeam][len(teams[idxTeam]) - 1]
                         board[head[0]][head[1]] = 3
                         board[tail[0]][tail[1]] = 1
-                        teams[idxTeam].append(head)
-                        teams[idxTeam].appendleft(tail)
+                        teams[idxTeam] = deque(list(teams[idxTeam])[::-1])
 
                         # 점수 추가
                         return (idxPerson+1)**2
 
         x += addX
         y += addY
+    return 0
 
 teams = []
 # 팀별 사람 좌표 넣기
@@ -108,8 +114,8 @@ for i in range(n):
 
 # 라운드 0,1, 2 증가하다가 n 이랑 같으면 나누고 나머지
 # 함수로 빼자
-answer = 0
 
+answer = 0
 for round in range(k):
     # 머리사람 따라 한칸 이동
     for team in teams:
