@@ -189,6 +189,9 @@ for year in range(1, m + 1):
     # 제초제 뿌릴 곳 선정
     i,j = selectKiller(board, k)
 
+    if i == -1 and j == -1:
+        continue
+
     # 제초제 뿌리기 (현재 년도 넣어서 제초제)
     answer += kill(board,i,j, year)
 
