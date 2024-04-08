@@ -113,7 +113,7 @@ def select(i,j, k):
         if not (0 <= nnx < n and 0 <= nny < n):
             continue
 
-        if board[nnx][nny] > 0:
+        if board[nnx][nny] > 0 and killers[nnx][nny] < year:
             q.append((nnx,nny, times+1, d))
 
     return cnt
