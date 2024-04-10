@@ -199,4 +199,4 @@ for _ in range(k):
             # 방향, 초기능력치, 무기 공격력, x, y
             players[idx] = (d, startStat, weaponStat, nx, ny)
             board[nx][ny] = idx
-print(points)
+print(*points)
