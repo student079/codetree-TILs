@@ -1,8 +1,9 @@
 import sys
 from collections import deque
+from collections import defaultdict
 
 q = int(sys.stdin.readline())
-weights = dict()
+weights = defaultdict(int)
 def make(command):
     n, m = command[1], command[2]
     boxes = deque(command[3:])
@@ -27,22 +28,30 @@ def get(w_max):
         if not belt:
             continue
         if weights[belt[0]] <= w_max:
-            weight += weights[belt.popleft()]
+            b_id = belt.popleft()
+            weight += weights[b_id]
+            weights[b_id] = 0
         else:
             belt.append(belt.popleft())
     return weight
 
 
 def remove(r_id):
+    if weights[r_id] == 0:
+        return -1
+
     for idx in range(m):
         belt = belts[idx]
         if r_id in belt:
             belt.remove(r_id)
+            weights[r_id] = 0
             return r_id
-    return -1
 
 
 def check(f_id):
+    if weights[f_id] == 0:
+        return -1
+
     for idx in range(m):
         belt = belts[idx]
 
@@ -52,7 +61,6 @@ def check(f_id):
                     return idx + 1
                 else:
                     belt.append(belt.popleft())
-    return -1
 
 
 def breakdown(b_num):
