@@ -63,8 +63,8 @@ def breakdown(b_num):
     g_num = (b_num+1) % m
     while True:
         if not brokenBelt[g_num]:
-            while belts[b_num]:
-                belts[g_num].append(belts[b_num].popleft())
+            belts[g_num].extend(belts[b_num])
+            belts[b_num] = deque()
             brokenBelt[b_num] = True
             return b_num+1
         g_num = (g_num+1) % m
