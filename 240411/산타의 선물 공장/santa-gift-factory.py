@@ -51,11 +51,10 @@ def check(f_id):
         return -1
 
     beltIdx = boxes[f_id][1]
-    belt = belts[beltIdx]
-    while True:
-        if belt[0] == f_id:
-            return beltIdx+1
-        belt.append(belt.popleft())
+    bidx = belts[beltIdx].index(f_id)
+    belts[beltIdx].extend(list(belts[beltIdx])[:bidx])
+    belts[beltIdx] = deque(list(belts[beltIdx])[bidx:])
+    return beltIdx + 1
 
 def breakdown(b_num):
     b_num-=1
