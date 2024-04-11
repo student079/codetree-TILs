@@ -1,90 +1,89 @@
+# 시간 복잡도
+
 import sys
 from collections import deque
 from collections import defaultdict
 
 q = int(sys.stdin.readline())
-weights = defaultdict(int)
-def make(command):
-    n, m = command[1], command[2]
-    boxes = deque(command[3:])
-    for i in range(n):
-        weights[boxes[i]] = boxes[n + i]
-    belts = []
-    for _ in range(m):
-        temp = deque()
-        for _ in range(n // m):
-            temp.append(boxes.popleft())
-        belts.append(temp)
-    return (belts, n, m)
-
-command = list(map(int, sys.stdin.readline().rstrip().split()))
-belts, n, m = make(command)
+command = list(map(int,sys.stdin.readline().rstrip().split()))
+n, m = command[1], command[2]
+command = command[3:]
+boxes = defaultdict(list)
+belts = []
+idx = 0
 brokenBelt = [False] * m
+for i in range(m):
+    temp = deque()
+    for j in range(n//m):
+        temp.append(command[idx])
+        boxes[command[idx]] = [command[idx+n], i]
+        idx += 1
+    belts.append(temp)
 
 def get(w_max):
-    weight = 0
-    for idx in range(m):
-        belt = belts[idx]
-        if not belt:
-            continue
-        if weights[belt[0]] <= w_max:
-            b_id = belt.popleft()
-            weight += weights[b_id]
-            weights[b_id] = 0
-        else:
-            belt.append(belt.popleft())
-    return weight
+    res = 0
 
+    for i in range(m):
+        if brokenBelt[i]:
+            continue
+        belt = belts[i]
+        if belt:
+            if boxes[belt[0]][0] <= w_max:
+                box = belt.popleft()
+                res += boxes[box][0]
+                boxes[box][1] = -1
+            else:
+                belt.append(belt.popleft())
+    return res
 
 def remove(r_id):
-    if weights[r_id] == 0:
+    if not boxes[r_id] or boxes[r_id][1] == -1:
         return -1
 
-    for idx in range(m):
-        belt = belts[idx]
-        if r_id in belt:
-            belt.remove(r_id)
-            weights[r_id] = 0
-            return r_id
-
+    beltIdx = boxes[r_id][1]
+    belt = belts[beltIdx]
+    belt.remove(r_id)
+    boxes[r_id][1] = -1
+    return r_id
 
 def check(f_id):
-    if weights[f_id] == 0:
+    if not boxes[f_id] or boxes[f_id][1] == -1:
         return -1
 
-    for idx in range(m):
-        belt = belts[idx]
-
-        if f_id in belt:
-            while True:
-                if belt[0] == f_id:
-                    return idx + 1
-                else:
-                    belt.append(belt.popleft())
-
+    beltIdx = boxes[f_id][1]
+    belt = belts[beltIdx]
+    while True:
+        if belt[0] == f_id:
+            return beltIdx+1
+        belt.append(belt.popleft())
 
 def breakdown(b_num):
     b_num-=1
     if brokenBelt[b_num]:
         return -1
 
-    g_num = (b_num+1) % m
+    g_num = (b_num+1)%m
     while True:
         if not brokenBelt[g_num]:
-            belts[g_num].extend(belts[b_num])
-            belts[b_num] = deque()
             brokenBelt[b_num] = True
+            belt = belts[b_num]
+            while belt:
+                box = belt.popleft()
+                boxes[box][1] = g_num
+                belts[g_num].append(box)
             return b_num+1
-        g_num = (g_num+1) % m
-
+        g_num = (g_num + 1) % m
 
 for _ in range(q-1):
     command = list(map(int,sys.stdin.readline().rstrip().split()))
     if command[0] == 200:
         print(get(command[1]))
+
     elif command[0] == 300:
         print(remove(command[1]))
+
     elif command[0] == 400:
         print(check(command[1]))
+
     elif command[0] == 500:
         print(breakdown(command[1]))
