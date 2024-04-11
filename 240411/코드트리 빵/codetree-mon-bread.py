@@ -58,8 +58,6 @@ while answer < m:
     for _ in range(len(people)):
         person = people.popleft()
         idx, x, y = person
-        if res[idx]:
-            continue
 
         for k in range(4):
             nx = x + dx[k]
@@ -77,11 +75,18 @@ while answer < m:
 
                 visited[idx][nx][ny] = True
                 people.append((idx, nx,ny))
-                
+
     # 격자에 있는 사람들이 모두 이동한 뒤에 해당 칸을 지나갈 수 없어짐에 유의합니다.
     for i in range(m):
-        if res[i]:
+        if res[i] and not cantMove[stores[i][0]][stores[i][1]]:
             cantMove[stores[i][0]][stores[i][1]] = True
+            for _ in range(len(people)):
+                idx, x, y = people.popleft()
+                if idx == i or (x, y) == stores[i]:
+                    continue
+                else:
+                    people.append((idx,x,y))
+
     #만약 편의점에 도착한다면 해당 편의점에서 멈추게 되고,
     # 이때부터 다른 사람들은 해당 편의점이 있는 칸을 지나갈 수 없게 됩니다.
     # 격자에 있는 사람들이 모두 이동한 뒤에 해당 칸을 지나갈 수 없어짐에 유의합니다.
@@ -101,6 +106,12 @@ while answer < m:
         # 편의점과 가장 가까운 베이스 캠프
         baseX, baseY = computeNarrowBase(stores[idx][0], stores[idx][1])
         people.append([idx, baseX, baseY])
+        for _ in range(len(people)):
+            i, x, y = people.popleft()
+            if i != idx and (x, y) == (baseX, baseY):
+                continue
+            else:
+                people.append((i,x,y))
         cantMove[baseX][baseY] = True
 
 print(time)
