@@ -126,7 +126,15 @@ while answer < m:
     if time <= m:
         idx = time-1
         # 편의점과 가장 가까운 베이스 캠프
-        baseX, baseY = computeNarrowBase(stores[idx][0], stores[idx][1])
+        movePerson(idx, stores[idx][0], stores[idx][1])
+        distance = float('inf')
+        baseX, baseY = -1, -1
+        for i in range(n):
+            for j in range(n):
+                if board[i][j] == 1 and step[idx][i][j] != -1 and distance> step[idx][i][j]:
+                    distance = step[idx][i][j]
+                    baseX = i
+                    baseY = j
         people.append([idx, baseX, baseY])
         cantMove[baseX][baseY] = True
 
