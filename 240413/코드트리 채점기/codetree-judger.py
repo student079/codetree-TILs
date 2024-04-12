@@ -59,7 +59,7 @@ def tryJugge(t):
 
     # readyQ에서 확인해서 가능하면 빼기
     heapq.heapify(readyQ)
-    for idx in range(len(readyQ)):
+    for idx in range(count):
         # priority, inTime, dm = heapq.heappop(readyQ)
         priority, inTime, dm = readyQ[idx]
         plainDomain = dm.split('/')[0]
