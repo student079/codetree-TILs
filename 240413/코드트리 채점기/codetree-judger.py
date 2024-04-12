@@ -31,8 +31,10 @@ judging = ["" for _ in range(N+1)]
 readyQ = []
 # 우선순위 1, 들어온 시간 0, url
 heapq.heappush(readyQ, (1, 0, u0))
+count = 1
 
 def request(t, p, u):
+    global count
     # 단, 채점 대기 큐에 있는 task 중 정확히 u와 일치하는 url이 단 하나라도 존재한다면
     # 큐에 추가하지 않고 넘어갑니다.
 
@@ -43,9 +45,11 @@ def request(t, p, u):
     else:
         domains[u] = [-1, -1]
         heapq.heappush(readyQ, (p, t, u))
+        count += 1
         return
 
 def tryJugge(t):
+    global count
     # readyQ에서 확인해서 가능하면 빼기
     for _ in range(len(readyQ)):
         priority, inTime, dm = heapq.heappop(readyQ)
@@ -70,13 +74,14 @@ def tryJugge(t):
         if judger:
             judging[heapq.heappop(judger)] = dm
             domains[dm][0] = t
-
+            count-=1
             history[plainDomain] = [t, -1]
             return
 
     return
 
 def finish(t, J_id):
+
     # 채점 종료
     if judging[J_id] == "":
         return
@@ -110,4 +115,4 @@ for _ in range(Q-1):
         finish(int(args[0]), int(args[1]))
 
     else:
-        print(len(readyQ))
+        print(count)
