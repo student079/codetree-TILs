@@ -50,6 +50,11 @@ def request(t, p, u):
 
 def tryJugge(t):
     global count
+
+    # 채점기 확인
+    if not judger:
+        return
+    
     # readyQ에서 확인해서 가능하면 빼기
     for _ in range(len(readyQ)):
         priority, inTime, dm = heapq.heappop(readyQ)
@@ -70,13 +75,11 @@ def tryJugge(t):
                 heapq.heappush(readyQ, (priority, inTime, dm))
                 continue
 
-        # 채점기 확인
-        if judger:
-            judging[heapq.heappop(judger)] = dm
-            domains[dm][0] = t
-            count-=1
-            history[plainDomain] = [t, -1]
-            return
+        judging[heapq.heappop(judger)] = dm
+        domains[dm][0] = t
+        count-=1
+        history[plainDomain] = [t, -1]
+        return
 
     return
 
