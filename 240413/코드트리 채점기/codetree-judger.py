@@ -30,7 +30,8 @@ judging = ["" for _ in range(N+1)]
 
 readyQ = []
 # 우선순위 1, 들어온 시간 0, url
-heapq.heappush(readyQ, (1, 0, u0))
+# heapq.heappush(readyQ, (1, 0, u0))
+readyQ.append((1, 0, u0))
 count = 1
 
 def request(t, p, u):
@@ -44,7 +45,8 @@ def request(t, p, u):
 
     else:
         domains[u] = [-1, -1]
-        heapq.heappush(readyQ, (p, t, u))
+        # heapq.heappush(readyQ, (p, t, u))
+        readyQ.append((p, t, u))
         count += 1
         return
 
@@ -54,27 +56,30 @@ def tryJugge(t):
     # 채점기 확인
     if not judger:
         return
-    
+
     # readyQ에서 확인해서 가능하면 빼기
-    for _ in range(len(readyQ)):
-        priority, inTime, dm = heapq.heappop(readyQ)
+    heapq.heapify(readyQ)
+    for idx in range(len(readyQ)):
+        # priority, inTime, dm = heapq.heappop(readyQ)
+        priority, inTime, dm = readyQ[idx]
         plainDomain = dm.split('/')[0]
 
         # 진행중인 도메인인지
         if domains[dm] and domains[dm][0] != -1 and domains[dm][1] == -1:
-            heapq.heappush(readyQ, (priority, inTime, dm))
+            # heapq.heappush(readyQ, (priority, inTime, dm))
             continue
 
         # 최근 진행된 채점 시간 체크
         if history[plainDomain]:
             start, end = history[plainDomain]
             if end == -1:
-                heapq.heappush(readyQ, (priority, inTime, dm))
+                # heapq.heappush(readyQ, (priority, inTime, dm))
                 continue
             if t < start + 3 * (end - start):
-                heapq.heappush(readyQ, (priority, inTime, dm))
+                # heapq.heappush(readyQ, (priority, inTime, dm))
                 continue
 
+        readyQ.pop(idx)
         judging[heapq.heappop(judger)] = dm
         domains[dm][0] = t
         count-=1
