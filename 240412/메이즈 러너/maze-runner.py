@@ -31,8 +31,8 @@ dy = (0, 0, -1, 1)
 def selectSquare(exit):
     for length in range(2, N+1):
         # 좌상단 0, 0부터 확인
-        for x1 in range(N-length):
-            for y1 in range(N - length):
+        for x1 in range(N-length+1):
+            for y1 in range(N - length+1):
                 # 우하단
                 x2 = x1 + length - 1
                 y2 = y1 + length - 1
@@ -46,8 +46,7 @@ def selectSquare(exit):
                     for j in range(y1, y2 + 1):
                         if playerXY[i][j] >= 1:
                             return x1, y1, x2, y2
-
-
+    print()
 def rotateMaze(exit):
     x1, y1, x2, y2 = selectSquare(exit)
     length = x2 - x1
@@ -97,9 +96,6 @@ answer = 0
 moveDistance = 0
 for _ in range(K):
 
-    if answer == M:
-        break
-
     # 플레이어들 상하좌우 순서로 살펴보면서 최단거리 작은 값으로 이동
     for _ in range(len(players)):
         x, y = players.popleft()
@@ -132,6 +128,9 @@ for _ in range(K):
             moveDistance += 1
             playerXY[x][y] -= 1
             playerXY[resX][resY] += 1
+
+    if answer == M:
+        break
 
     # 미로 회전
     # 회전할때 내구도 깎임
