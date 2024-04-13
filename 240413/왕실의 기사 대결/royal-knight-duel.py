@@ -26,8 +26,8 @@ dy = (0, 1, 0, -1)
 
 def tryMove(idx, d):
     x1, y1, x2, y2, k = knights[idx]
-    visited = set()
-    visited.add(idx)
+    visited = []
+    visited.append(idx)
 
     if k <= 0:
         return False
@@ -52,11 +52,11 @@ def tryMove(idx, d):
                     return False
                 temp = kBoard[i][j]
                 if temp != 0 and temp not in visited:
-                    visited.add(temp)
+                    visited.append(temp)
                     q.append(temp)
 
     # 여기까지 오면 가능한거
-    for index in list(visited):
+    for index in visited[::-1]:
         isMoved[index] = True
 
         x1, y1, x2, y2, k = knights[index]
