@@ -66,7 +66,7 @@ for i in range(K):
             d = (d + 1) % 4
         else:
             # 넘나 확인
-            if 0 <= x < 3:
+            if 0 <= x < 3 or 0 <= x - 1 < 3:
                 board = [[0] * C for _ in range(R + 3)]
                 exitBoard = [[False] * C for _ in range(R + 3)]
             # 정령 이동
