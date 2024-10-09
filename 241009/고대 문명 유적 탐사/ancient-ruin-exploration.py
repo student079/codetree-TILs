@@ -66,9 +66,9 @@ def searchMax():
     resultY = 0
     resultAngle = 0
     resultValues = []
-    for k in range(4):
-        for i in range(1, 4):
-            for j in range(1, 4):
+    for k in range(1,4):
+        for j in range(1, 4):
+            for i in range(1, 4):
                 rotateBoard = rotate(i, j, k)
                 values = bfs(rotateBoard)
                 s = len(values)
@@ -111,6 +111,7 @@ for _ in range(K):
     # 연쇄 획득
     while True:
         values = bfs(board)
+      
         s = len(values)
         if s == 0:
             break
