@@ -91,10 +91,11 @@ def getRest():
 K, M = map(int, sys.stdin.readline().rstrip().split())
 board = [list(map(int,sys.stdin.readline().rstrip().split())) for _ in range(5)]
 rest = deque(list(map(int,sys.stdin.readline().rstrip().split())))
-answer = 0
+answers = []
 
 # K 번 반복
 for _ in range(K):
+    answer = 0
     resultX, resultY, resultAngle, resultValues = searchMax()
     s = len(resultValues)
     if s == 0:
@@ -118,4 +119,5 @@ for _ in range(K):
         answer += s
         getRest()
 
-print(answer)
+    answers.append(answer)
+print(*answers)
