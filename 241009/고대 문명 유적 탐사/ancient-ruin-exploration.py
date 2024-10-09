@@ -107,4 +107,15 @@ for _ in range(K):
     answer += s
     getRest()
 
+    # 연쇄 획득
+    while True:
+        values = bfs(board)
+        s = len(values)
+        if s == 0:
+            break
+        for x, y in values:
+            board[x][y] = 0
+        answer += s
+        getRest()
+
 print(answer)
