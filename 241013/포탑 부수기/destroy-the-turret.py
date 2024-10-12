@@ -84,8 +84,9 @@ def restore(visited):
     alive = 0
     for i in range(N):
         for j in range(M):
-            if board[i][j] > 0 and (i,j) not in visited:
-                board[i][j] += 1
+            if board[i][j] > 0:
+                if (i,j) not in visited:
+                    board[i][j] += 1
                 alive += 1
     return alive
 
@@ -94,7 +95,7 @@ for step in range(1, K+1):
     visited = attacking(attack, defense)
     # 포탑 정비
     alive = restore(visited)
-    if alive == 0:
+    if alive < 2:
         break
 
 answer = 0
