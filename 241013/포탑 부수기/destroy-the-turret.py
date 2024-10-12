@@ -90,9 +90,21 @@ def restore(visited):
                 alive += 1
     return alive
 
+def check():
+    alive = 0
+    for i in range(N):
+        for j in range(M):
+            if board[i][j] > 0:
+                alive += 1
+    return alive
+
 for step in range(1, K+1):
     attack, defense = getMostCanon()
     visited = attacking(attack, defense)
+
+    if check() < 2:
+        break
+
     # 포탑 정비
     alive = restore(visited)
     if alive < 1:
