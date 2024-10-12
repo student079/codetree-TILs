@@ -10,10 +10,8 @@ board = []
 for _ in range(N):
     board.append(list(map(int,sys.stdin.readline().rstrip().split())))
 attackCanonTime = [[0] * M for _ in range(N)]
-alive = N * M
 
 def getMostCanon():
-    global alive
     # 100
     candidates = []
     for i in range(N):
@@ -24,7 +22,7 @@ def getMostCanon():
 
     candidates.sort(key = lambda x: (x[2], -attackCanonTime[x[0]][x[1]], -(x[0]+x[1]), -x[1]))
     alive = len(candidates)
-    return [candidates[0], candidates[alive-1]]
+    return [candidates[0], candidates[alive-1], alive]
 
 dx = (0,1,0,-1, -1, -1, 1, 1)
 dy = (1, 0, -1, 0, -1, 1, -1, 1)
@@ -94,7 +92,7 @@ def restore(visited):
                     board[i][j] += 1
 
 for step in range(1, K+1):
-    attack, defense = getMostCanon()
+    attack, defense, alive = getMostCanon()
     if alive <= 1:
         break
     visited = attacking(attack, defense)
