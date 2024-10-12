@@ -48,13 +48,16 @@ def bfs(attackX, attackY, defenseX, defenseY):
             
     return -1
 
-def attackingLazer(defenseX, defenseY, realAttackPower):
+def attackingLazer(attackX, attackY,defenseX, defenseY, realAttackPower):
     board[defenseX][defenseY] -= realAttackPower
     visited = {(defenseX, defenseY)}
     power = realAttackPower // 2
     for k in range(8):
         nx = (defenseX + dx[k]) % N
         ny = (defenseY + dy[k]) % M
+
+        if nx == attackX and ny == attackY:
+            continue
 
         if board[nx][ny] > 0:
             visited.add((nx ,ny))
@@ -71,7 +74,7 @@ def attacking(attack, defense):
     
     visited = bfs(attackX, attackY, defenseX, defenseY)
     if visited == -1:
-        visited = attackingLazer(defenseX, defenseY, realAttackPower)
+        visited = attackingLazer(attackX, attackY,defenseX, defenseY, realAttackPower)
     else:
         visited -= {(defenseX, defenseY)}
         visited -= {(attackX, attackY)}
