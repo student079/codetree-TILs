@@ -29,20 +29,29 @@ dy = (1, 0, -1, 0, -1, 1, -1, 1)
 
 def bfs(attackX, attackY, defenseX, defenseY):
     q = deque()
-    q.append((attackX, attackY, {(attackX, attackY)}))
+    q.append((attackX, attackY))
+    visited = [[0] * M for _ in range(N)]
+    visited[attackX][attackY] = -1
     
     while q:
-        x, y, visited = q.popleft()
+        x, y= q.popleft()
         
         if x == defenseX and y == defenseY:
-            return visited
+            temp = set()
+            while visited[x][y] != -1:
+                temp.add((x, y))
+                nextX, nextY = visited[x][y]
+                x, y = nextX, nextY
+            
+            return temp
         
         for k in range(4):
             nx = (x + dx[k]) % N
             ny = (y + dy[k]) % M
             
-            if board[nx][ny] > 0 and (nx, ny) not in visited:
-                q.append((nx, ny, visited | {(nx, ny)}))
+            if board[nx][ny] > 0 and visited[nx][ny] == 0:
+                q.append((nx, ny))
+                visited[nx][ny] = (x, y)
             
     return -1
 
