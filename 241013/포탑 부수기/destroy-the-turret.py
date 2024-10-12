@@ -94,7 +94,7 @@ for step in range(1, K+1):
     visited = attacking(attack, defense)
     # 포탑 정비
     alive = restore(visited)
-    if alive < 1:
+    if alive == 0:
         break
 
 answer = 0
