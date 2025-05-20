@@ -49,35 +49,36 @@ int main() {
                     int timeCost = increasedJumpPower * increasedJumpPower;
                     stateGraph[currentState].push_back({nextState, timeCost});
                 }
-            }
 
-            for (int newJumpPower = 1; newJumpPower < jumpPower; newJumpPower++) {
-                int nextState = getStateId(row, col, newJumpPower);
-                stateGraph[currentState].push_back({nextState, 1});
-            }
-
-            for (int direction = 0; direction < 4; direction++) {
-                int landingRow = row;
-                int landingCol = col;
-                bool validJump = true;
-
-                for (int step = 0; step < jumpPower; step++) {
-                    landingRow += dRow[direction];
-                    landingCol += dCol[direction];
-
-                    if (landingRow < 1 || landingRow > gridSize || landingCol < 1 || landingCol > gridSize || lakeGrid[landingRow][landingCol] == '#') {
-                        validJump = false;
-                        break;
-                    }
-                }
-
-                validJump = validJump && (lakeGrid[landingRow][landingCol] == '.');
-
-                if (validJump) {
-                    int nextState = getStateId(landingRow, landingCol, jumpPower);
+                for (int newJumpPower = 1; newJumpPower < jumpPower; newJumpPower++) {
+                    int nextState = getStateId(row, col, newJumpPower);
                     stateGraph[currentState].push_back({nextState, 1});
                 }
+
+                for (int direction = 0; direction < 4; direction++) {
+                    int landingRow = row;
+                    int landingCol = col;
+                    bool validJump = true;
+
+                    for (int step = 0; step < jumpPower; step++) {
+                        landingRow += dRow[direction];
+                        landingCol += dCol[direction];
+
+                        if (landingRow < 1 || landingRow > gridSize || landingCol < 1 || landingCol > gridSize || lakeGrid[landingRow][landingCol] == '#') {
+                            validJump = false;
+                            break;
+                        }
+                    }
+
+                    validJump = validJump && (lakeGrid[landingRow][landingCol] == '.');
+
+                    if (validJump) {
+                        int nextState = getStateId(landingRow, landingCol, jumpPower);
+                        stateGraph[currentState].push_back({nextState, 1});
+                    }
+                }
             }
+
         }
     }
 
@@ -101,7 +102,7 @@ int main() {
             auto [currentTime, currentState] = dijkstraPQ.top();
             dijkstraPQ.pop();
 
-            if (distance[currentState] < currentState) {
+            if (distance[currentState] < currentTime) {
                 continue;
             }
 
@@ -130,7 +131,6 @@ int main() {
 
         cout << (answerTime < INF ? answerTime : -1) << "\n";
     }
-    
 
     return 0;
 }
